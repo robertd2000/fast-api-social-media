@@ -58,18 +58,18 @@ async def test_dislike_post():
         user_access_token_2 = create_access_token({"sub": "admin@email.com"})
         resolved_dislike_response_v1 = await ac.post(f'/posts/{1}/dislike', json={"post_id": 1},
                                                      headers={'Authorization': f'Bearer {user_access_token_2}'})
-        resolved_undislike_response = await ac.post(f'/posts/{1}/dislike', json={"post_id": 1},
-                                                    headers={'Authorization': f'Bearer {user_access_token_2}'})
+        resolved_un_dislike_response = await ac.post(f'/posts/{1}/dislike', json={"post_id": 1},
+                                                     headers={'Authorization': f'Bearer {user_access_token_2}'})
         resolved_dislike_response_v2 = await ac.post(f'/posts/{1}/dislike', json={"post_id": 1},
                                                      headers={'Authorization': f'Bearer {user_access_token_2}'})
     assert rejected_response.status_code == 403, rejected_response.text
     assert resolved_dislike_response_v1.status_code == 200, resolved_dislike_response_v1.text
-    assert resolved_undislike_response.status_code == 200, resolved_undislike_response.text
+    assert resolved_un_dislike_response.status_code == 200, resolved_un_dislike_response.text
     assert resolved_dislike_response_v2.status_code == 200, resolved_dislike_response_v1.text
 
     assert rejected_response.json()['detail'] == 'Вы не можете дислайкать собственный пост!'
     assert resolved_dislike_response_v1.json()['message'] == 'Дислайк успешно поставлен!'
-    assert resolved_undislike_response.json()['message'] == 'Дислайк успешно убран!'
+    assert resolved_un_dislike_response.json()['message'] == 'Дислайк успешно убран!'
     assert resolved_dislike_response_v2.json()['message'] == 'Дислайк успешно поставлен!'
 
 
@@ -104,14 +104,14 @@ async def test_get_post():
 @pytest.mark.asyncio
 async def test_delete_post():
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        rejected_unauth_response = await ac.delete(f'/posts/{1}')
+        rejected_unauthenticated_response = await ac.delete(f'/posts/{1}')
         user_access_token = create_access_token({"sub": "user@gmail.com"})
         rejected_response = await ac.delete(f'/posts/{1}', headers={'Authorization': f'Bearer {user_access_token}'})
         await test_create_post()
         response = await ac.delete(f'/posts/{1}', headers={'Authorization': f'Bearer {user_access_token}'})
 
-    assert rejected_unauth_response.status_code == 401, rejected_unauth_response.text
-    assert rejected_unauth_response.json()['detail'] == 'Not authenticated'
+    assert rejected_unauthenticated_response.status_code == 401, rejected_unauthenticated_response.text
+    assert rejected_unauthenticated_response.json()['detail'] == 'Not authenticated'
 
     assert rejected_response.status_code == 404, rejected_response.text
     assert rejected_response.json()['detail'] == 'Пост с id 1 не найден!'
@@ -123,7 +123,8 @@ async def test_delete_post():
 @pytest.mark.asyncio
 async def test_update_post():
     async with AsyncClient(app=app, base_url="http://test") as ac:
-        rejected_unauth_response = await ac.put(f'/posts/{1}/update', json={'title': 'New title!!!', 'body': 'Updated'})
+        rejected_unauthenticated_response = await ac.put(f'/posts/{1}/update',
+                                                         json={'title': 'New title!!!', 'body': 'Updated'})
         user_access_token = create_access_token({"sub": "user@gmail.com"})
         rejected_response = await ac.put(f'/posts/{1}/update', headers={'Authorization': f'Bearer {user_access_token}'},
                                          json={'title': 'New title!!!', 'body': 'Updated'})
@@ -131,8 +132,8 @@ async def test_update_post():
         response = await ac.put(f'/posts/{1}/update', headers={'Authorization': f'Bearer {user_access_token}'},
                                 json={'title': 'New title!!!', 'body': 'Updated'})
 
-    assert rejected_unauth_response.status_code == 401, rejected_unauth_response.text
-    assert rejected_unauth_response.json()['detail'] == 'Not authenticated'
+    assert rejected_unauthenticated_response.status_code == 401, rejected_unauthenticated_response.text
+    assert rejected_unauthenticated_response.json()['detail'] == 'Not authenticated'
 
     assert rejected_response.status_code == 404, rejected_response.text
     assert rejected_response.json()['detail'] == 'Пост с id 1 не найден!'
