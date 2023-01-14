@@ -10,6 +10,8 @@ FastAPI Social Media
 - Документация (Swagger/ReDoc).
 
 
+[Вторая версия проекта с переработанными моделями и схемами](https://github.com/robertd2000/fast-api-social-v2)
+
 ## Как запустить проект
 
 Скачать как архив из **GitHub** репозитория или с помощью команды ```git clone```
