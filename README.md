@@ -1,16 +1,24 @@
 # fast-api-social-media
-FastAPI 
+FastAPI Social Media 
 
-Как запустить проект
+## Как запустить проект
 
-Скачать как архив из GitHub репозитория или с помощью команды git clone
+Скачать как архив из **GitHub** репозитория или с помощью команды ```git clone```
 
-Установить зависимости из файла requirements.txt - pip install -r requirements.txt
+Установить зависимости из файла **requirements.txt** с помощью команды
 
-В файл config.py необходимо занести данные о Вашей базе данных
+```
+pip install -r requirements.txt
+```
 
-Запустить проект командой uvicorn main:app --reload
+В файл **config.py** необходимо занести данные о Вашей базе данных
 
-Перейти по адресу http://127.0.0.1:8000/docs
+Запустить проект командой 
+
+```
+uvicorn main:app --reload
+```
+
+Перейти по адресу [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
 
 Кроме того, можно запустить тесты
